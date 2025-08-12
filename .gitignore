@@ -3,6 +3,12 @@
 /.idea/*
 ###< PhpStorm ###
 
+###> Configuration ###
+/public/.htaccess
+/php.ini
+/.docker-compose.env
+###< Configuration ###
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
