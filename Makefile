@@ -5,12 +5,14 @@
 
 up: ## Start Docker containers
 	docker-compose --env-file .env.local up -d
+	@echo "Site web disponible: http://localhost:8080"
 
 up-auto: ## Start containers choosing a free host port for Postgres automatically
 	@PORT=$$(bash scripts/pick-free-port.sh $${POSTGRES_PORT:-5433}); \
 	echo "Using POSTGRES_PORT=$$PORT"; \
 	POSTGRES_PORT=$$PORT docker-compose --env-file .env.local up -d; \
-	echo "Database exposed on localhost:$$PORT"
+	echo "Database exposed on localhost:$$PORT"; \
+	echo "Site web disponible: http://localhost:8080"
 
 down: ## Stop Docker containers
 	docker-compose --env-file .env.local down

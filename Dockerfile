@@ -1,16 +1,19 @@
 # Utilisez une image officielle de PHP et Apache
 FROM php:8.2-apache
 
-# Installez les dépendances nécessaires
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libzip-dev \
-    libpq-dev \
-    libicu-dev \
-    zip \
-    unzip \
-    && docker-php-ext-install pdo pdo_pgsql zip opcache intl \
-    && pecl install xdebug \
-    && docker-php-ext-enable xdebug
+# Installez les dépendances nécessaires (versions épinglées)
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        libzip-dev="$(apt-cache show -a libzip-dev | grep -m1 '^Version:' | awk '{print $2}')" \
+        libpq-dev="$(apt-cache show -a libpq-dev | grep -m1 '^Version:' | awk '{print $2}')" \
+        libicu-dev="$(apt-cache show -a libicu-dev | grep -m1 '^Version:' | awk '{print $2}')" \
+        zip="$(apt-cache show -a zip | grep -m1 '^Version:' | awk '{print $2}')" \
+        unzip="$(apt-cache show -a unzip | grep -m1 '^Version:' | awk '{print $2}')"; \
+    rm -rf /var/lib/apt/lists/*; \
+    docker-php-ext-install pdo pdo_pgsql zip opcache intl; \
+    pecl install xdebug; \
+    docker-php-ext-enable xdebug
 
 # Activez le module Apache rewrite
 RUN a2enmod rewrite
