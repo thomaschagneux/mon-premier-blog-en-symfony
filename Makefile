@@ -36,10 +36,10 @@ ps: ## Show Docker containers status
 .PHONY: install update cache-clear assets migrations fixtures tests reset-db
 
 install: ## Install dependencies
-	docker-compose --env-file .env.local exec web composer install
+	composer install
 
 update: ## Update dependencies
-	docker-compose --env-file .env.local exec web composer update
+	composer update
 
 assets: ## Install assets
 	docker-compose --env-file .env.local exec web php bin/console asset-map:compile
@@ -77,6 +77,8 @@ reset-db-hard: ## Reset DB by recreating the Postgres volume, then load fixtures
 	$(MAKE) reset-db
 
 clean: ## Clear Symfony cache
+	php bin/console cache:clear
+	php bin/console cache:warm
 	docker-compose --env-file .env.local exec web php bin/console cache:clear
 	docker-compose --env-file .env.local exec web php bin/console cache:warm
 	$(MAKE) cs-fix
