@@ -1,5 +1,7 @@
 import $ from 'jquery';
-import 'datatables.net';
+import './component/datatables/datatables.min.js';
+import './component/datatables/datatables.min.css';
+
 
 // Ensure jQuery is available globally for the plugin
 window.$ = window.jQuery = $;

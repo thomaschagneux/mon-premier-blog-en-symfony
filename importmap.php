@@ -48,6 +48,9 @@ return [
     'datatables.net' => [
         'version' => '1.13.8',
     ],
+    'datatables.net-dt' => [
+        'version' => '1.13.8',
+    ],
     'app' => [
         'path' => './assets/app.js',
         'entrypoint' => true,
