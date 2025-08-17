@@ -1,0 +1,13 @@
+{
+  "name": "mon-premier-blog-en-symfony",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Tailwind build via CLI for Symfony AssetMapper project",
+  "scripts": {
+    "dev": "tailwindcss -i ./assets/styles/tailwind.css -o ./public/assets/tailwind.css -w",
+    "build": "tailwindcss -i ./assets/styles/tailwind.css -o ./public/assets/tailwind.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.10"
+  }
+}

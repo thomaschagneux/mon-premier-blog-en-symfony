@@ -7,12 +7,56 @@ Ce projet est en cours de développement. Les fonctionnalités, la structure et 
 ---
 
 Sommaire
+- Installation rapide
 - Prérequis (+ commandes d'installation)
 - Installation et exécution SANS Docker (en local)
 - Installation et exécution AVEC Docker
+- Intégration Tailwind CSS (npm/yarn)
 - Commandes utiles (Makefile)
 - Variables d'environnement
 - Dépannage (FAQ courte)
+
+---
+
+Installation rapide
+1. Cloner et entrer dans le dossier
+   ```bash
+   git clone https://github.com/thomaschagneux/mon-premier-blog-en-symfony
+   cd mon-premier-blog-en-symfony
+   ```
+2. Créer votre fichier .env.local (adapter DATABASE_URL selon votre contexte)
+3. Installer les dépendances PHP
+   ```bash
+   composer install
+   ```
+4. Préparer la base de données
+   ```bash
+   php bin/console doctrine:database:create
+   php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+   # Optionnel: données de démo
+   php bin/console doctrine:fixtures:load --no-interaction
+   ```
+5. Compiler les assets Symfony (AssetMapper)
+   ```bash
+   php bin/console asset-map:compile
+   ```
+6. Installer et construire le CSS Tailwind
+   - Dev (watch):
+     ```bash
+     npm install
+     npm run dev
+     ```
+   - Prod (minifié):
+     ```bash
+     npm run build
+     ```
+   Note: Le fichier généré public/assets/tailwind.css est déjà référencé dans templates/base.html.twig.
+7. Lancer le serveur
+   ```bash
+   symfony server:start -d   # ou php -S 127.0.0.1:8000 -t public
+   ```
+
+Pour Docker, utilisez: `make build && make up`, puis `make install`, `make migrations`, `make assets`. Pour Tailwind, exécutez `npm run dev` ou `npm run build` sur votre machine hôte (le conteneur PHP n’embarque pas Node). 
 
 ---
 
@@ -215,6 +259,38 @@ Dépannage (FAQ courte)
 - Erreur de connexion base de données hors Docker: vérifiez que PostgreSQL tourne en local et que `DATABASE_URL` cible `127.0.0.1:5432` avec les bons identifiants.
 - Droits d'écriture sur `var/`: en Docker, les permissions sont ajustées dans l'image; hors Docker, donnez accès à votre utilisateur si nécessaire.
 - Assets non à jour: relancez `php bin/console asset-map:compile` (ou `make assets` en Docker).
+
+---
+
+Intégration Tailwind CSS (npm/yarn)
+Cette application inclut une configuration minimaliste pour utiliser Tailwind CSS via le CLI (sans bundler JS). Vous pouvez rester sur le CDN pendant que vous mettez en place le build local.
+
+Fichiers clés
+- tailwind.config.js — chemins de scan configurés pour les templates Twig et assets.
+- assets/styles/tailwind.css — point d'entrée CSS avec les directives @tailwind.
+- package.json — scripts pour le build et le watch.
+
+Commandes
+- Installation des dépendances Node:
+  ```bash
+  npm install
+  ```
+- Watch en développement (génère public/assets/tailwind.css en continu):
+  ```bash
+  npm run dev
+  ```
+- Build de production (minifié):
+  ```bash
+  npm run build
+  ```
+
+Intégration Twig
+- Le layout principal (templates/base.html.twig) charge:
+  - <link rel="stylesheet" href="{{ asset('assets/tailwind.css') }}"> (fichier compilé par le CLI)
+- Un fallback CDN peut être utilisé si nécessaire. Vous pouvez le retirer une fois le build local en place.
+
+Note Docker
+- L'image PHP n'embarque pas Node. Lancez `npm run dev`/`npm run build` sur votre hôte, le résultat dans public/assets est monté dans le conteneur.
 
 ---
 
