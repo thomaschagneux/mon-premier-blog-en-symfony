@@ -9,7 +9,9 @@
         {% endblock %}
 
         {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+            {% block importmap %}
+                {{ importmap(['app', 'datatables']) }}
+            {% endblock %}
         {% endblock %}
     </head>
     <body>

@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello UserController!{% endblock %}
+{% block title %}Liste des utilisateurs{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
 
 {% block body %}
 <style>
@@ -9,13 +13,15 @@
 </style>
 
 <div class="container-fluid">
-    <table class="table">
+    <table id="users-table" class="table datatables display" style="width:100%">
         <thead>
-            <th scope="col">#</th>
-            <th scope="col">Prénom</th>
-            <th scope="col">Nom</th>
-            <th scope="col">Email</th>
-            <th scope="col">Rôle</th>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Prénom</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Email</th>
+                <th scope="col">Rôle</th>
+            </tr>
         </thead>
         <tbody>
             {% for user in users %}
@@ -32,4 +38,8 @@
         </tbody>
     </table>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
 {% endblock %}
