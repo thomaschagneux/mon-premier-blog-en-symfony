@@ -12,14 +12,6 @@
  * The "importmap:require" command can be used to add new entries to this file.
  */
 return [
-    'app' => [
-        'path' => './assets/app.js',
-        'entrypoint' => true,
-    ],
-    'datatables' => [
-        'path' => './assets/datatables.js',
-        'entrypoint' => true,
-    ],
     '@hotwired/stimulus' => [
         'version' => '3.2.2',
     ],
@@ -49,5 +41,19 @@ return [
     ],
     '@swup/debug-plugin' => [
         'version' => '3.0.0',
+    ],
+    'jquery' => [
+        'version' => '3.7.1',
+    ],
+    'datatables.net' => [
+        'version' => '1.13.8',
+    ],
+    'app' => [
+        'path' => './assets/app.js',
+        'entrypoint' => true,
+    ],
+    'datatables' => [
+        'path' => './assets/datatables.js',
+        'entrypoint' => true,
     ],
 ];
