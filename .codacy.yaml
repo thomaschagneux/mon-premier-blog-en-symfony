@@ -25,6 +25,9 @@ exclude_paths:
     # tests not meant for static analysis
   - tests/**
 
+    # public folder
+  - public/**
+
     # Lock files and metadata
   - composer.lock
   - symfony.lock
