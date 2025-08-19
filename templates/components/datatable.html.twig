@@ -1,0 +1,20 @@
+<table
+    class="table datatables display"
+>
+    <thead>
+    <tr>
+        {% for column in columns %}
+            <th>{{ column.getTitle() }}</th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for entity in entities %}
+        <tr>
+            {% for column in columns %}
+                <td>{{ column.getData(entity) }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
