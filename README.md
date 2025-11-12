@@ -11,7 +11,7 @@ Sommaire
 - Prérequis (+ commandes d'installation)
 - Installation et exécution SANS Docker (en local)
 - Installation et exécution AVEC Docker
-- Intégration Tailwind CSS (npm/yarn)
+- CSS frontend — Bootstrap via AssetMapper (sans CDN)
 - Commandes utiles (Makefile)
 - Variables d'environnement
 - Dépannage (FAQ courte)
@@ -40,23 +40,12 @@ Installation rapide
    ```bash
    php bin/console asset-map:compile
    ```
-6. Installer et construire le CSS Tailwind
-   - Dev (watch):
-     ```bash
-     npm install
-     npm run dev
-     ```
-   - Prod (minifié):
-     ```bash
-     npm run build
-     ```
-   Note: Le fichier généré public/assets/tailwind.css est déjà référencé dans templates/base.html.twig.
-7. Lancer le serveur
-   ```bash
-   symfony server:start -d   # ou php -S 127.0.0.1:8000 -t public
-   ```
+6. Lancer le serveur
+```bash
+symfony server:start -d   # ou php -S 127.0.0.1:8000 -t public
+```
 
-Pour Docker, utilisez: `make build && make up`, puis `make install`, `make migrations`, `make assets`. Pour Tailwind, exécutez `npm run dev` ou `npm run build` sur votre machine hôte (le conteneur PHP n’embarque pas Node). 
+Pour Docker, utilisez: `make build && make up`, puis `make install`, `make migrations`, `make assets`. Le conteneur PHP n’embarque pas Node — exécutez les commandes npm sur votre machine hôte si nécessaire.
 
 ---
 
@@ -262,36 +251,99 @@ Dépannage (FAQ courte)
 
 ---
 
-Intégration Tailwind CSS (npm/yarn)
-Cette application inclut une configuration minimaliste pour utiliser Tailwind CSS via le CLI (sans bundler JS). Vous pouvez rester sur le CDN pendant que vous mettez en place le build local.
+CSS frontend — Bootstrap via AssetMapper (sans CDN)
+Ce projet utilise Bootstrap 5 servi localement via Symfony AssetMapper (aucun CDN en runtime).
 
 Fichiers clés
-- tailwind.config.js — chemins de scan configurés pour les templates Twig et assets.
-- assets/styles/tailwind.css — point d'entrée CSS avec les directives @tailwind.
-- package.json — scripts pour le build et le watch.
+- assets/styles/bootstrap.min.css — feuille de style Bootstrap (locale)
+- importmap.php — références à `bootstrap` et `@popperjs/core` pour le JS
+- assets/bootstrap.js — entrypoint qui importe Bootstrap et l’expose en `window.bootstrap`
+- templates/base*.html.twig — chargent `{{ asset('styles/bootstrap.min.css') }}` et `{{ importmap(['app','datatables','bootstrap-init']) }}`
 
-Commandes
-- Installation des dépendances Node:
+Commandes utiles
+- Récupérer la CSS Bootstrap localement:
   ```bash
-  npm install
+  make bootstrap-css        # télécharge la CSS dans assets/styles/
+  # ou si vous avez npm et ayez installé 'bootstrap':
+  make bootstrap-css-node   # copie depuis node_modules/bootstrap
   ```
-- Watch en développement (génère public/assets/tailwind.css en continu):
+- Recompiler les assets (AssetMapper):
   ```bash
-  npm run dev
+  make assets
   ```
-- Build de production (minifié):
+- Installer/mettre à jour les vendors ImportMap si besoin:
   ```bash
-  npm run build
+  make importmap
   ```
 
-Intégration Twig
-- Le layout principal (templates/base.html.twig) charge:
-  - <link rel="stylesheet" href="{{ asset('assets/tailwind.css') }}"> (fichier compilé par le CLI)
-- Un fallback CDN peut être utilisé si nécessaire. Vous pouvez le retirer une fois le build local en place.
+Vérifications rapides
+- `debug:asset-map` doit lister `styles/bootstrap.min.css` → `/public/assets/<hash>/bootstrap.min.css`.
+- Dans le navigateur: la CSS est chargée depuis `/assets/<hash>/bootstrap.min.css` (200), et `window.bootstrap.Modal` est disponible.
 
-Note Docker
-- L'image PHP n'embarque pas Node. Lancez `npm run dev`/`npm run build` sur votre hôte, le résultat dans public/assets est monté dans le conteneur.
+Note
+- Tailwind a été retiré du projet (fichiers, dépendances et templates).
 
 ---
 
 Licence: aucune
+
+
+---
+
+DataTables — intégration et thème Bootstrap 5 (optionnel)
+Ce projet inclut DataTables. Par défaut, le thème "DT" (standard) peut être utilisé. Pour une intégration visuelle cohérente avec Bootstrap 5, vous pouvez passer à l’intégration BS5 sans CDN en runtime.
+
+Étapes recommandées
+1. Modules JS (dans le conteneur):
+   ```bash
+   docker-compose --env-file .env.local exec web php bin/console importmap:require datatables.net-bs5
+   # (optionnel si vous utilisez le mode responsive)
+   docker-compose --env-file .env.local exec web php bin/console importmap:require datatables.net-responsive-bs5 || true
+   ```
+2. CSS locale (sur votre machine):
+   - via npm (recommandé)
+     ```bash
+     npm i datatables.net-bs5 datatables.net-responsive-bs5 --save
+     cp node_modules/datatables.net-bs5/css/dataTables.bootstrap5.min.css assets/styles/
+     # si responsive:
+     cp node_modules/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css assets/styles/
+     ```
+   - ou via téléchargement au build (toujours local en runtime)
+     ```bash
+     curl -fsSL https://cdn.datatables.net/2.3.4/css/dataTables.bootstrap5.min.css -o assets/styles/dataTables.bootstrap5.min.css
+     curl -fsSL https://cdn.datatables.net/responsive/3.0.2/css/responsive.bootstrap5.min.css -o assets/styles/responsive.bootstrap5.min.css
+     ```
+3. Entrypoint `assets/datatables.js` (exemple minimal):
+   ```js
+   import $ from 'jquery';
+   import 'datatables.net-bs5';
+   // import 'datatables.net-responsive-bs5'; // si utilisé
+   import './styles/dataTables.bootstrap5.min.css';
+   // import './styles/responsive.bootstrap5.min.css'; // si utilisé
+
+   window.$ = window.jQuery = $;
+
+   document.addEventListener('DOMContentLoaded', () => {
+     const $tables = $('.datatables');
+     if ($tables.length) {
+       $tables.each(function () {
+         this.classList.add('table', 'table-striped', 'table-bordered');
+       });
+       $tables.DataTable({
+         responsive: true // si extension importée
+       });
+     }
+   });
+   ```
+4. Recompiler les assets et recharger:
+   ```bash
+   make assets
+   # puis Ctrl/Cmd + F5 dans le navigateur
+   ```
+
+Notes
+- Si vous migrez vers BS5, vous pouvez retirer les variantes "DT" du projet:
+  ```bash
+  npm uninstall datatables.net-dt datatables.net-responsive-dt
+  ```
+- Vérifiez que les tables ont les classes Bootstrap souhaitées (ex.: `.table`, `.table-striped`).

@@ -46,10 +46,13 @@ return [
         'version' => '3.7.1',
     ],
     'datatables.net' => [
-        'version' => '1.13.8',
+        'version' => '2.3.4',
     ],
-    'datatables.net-dt' => [
-        'version' => '1.13.8',
+    '@popperjs/core' => [
+        'version' => '2.11.8',
+    ],
+    'bootstrap' => [
+        'version' => '5.3.3',
     ],
     'app' => [
         'path' => './assets/app.js',
@@ -58,5 +61,26 @@ return [
     'datatables' => [
         'path' => './assets/datatables.js',
         'entrypoint' => true,
+    ],
+    'bootstrap-init' => [
+        'path' => './assets/bootstrap.js',
+        'entrypoint' => true,
+    ],
+    'datatables.net-bs5' => [
+        'version' => '2.3.4',
+    ],
+    'datatables.net-bs5/css/dataTables.bootstrap5.min.css' => [
+        'version' => '2.3.4',
+        'type' => 'css',
+    ],
+    'datatables.net-responsive-bs5' => [
+        'version' => '3.0.7',
+    ],
+    'datatables.net-responsive' => [
+        'version' => '3.0.7',
+    ],
+    'datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css' => [
+        'version' => '3.0.7',
+        'type' => 'css',
     ],
 ];

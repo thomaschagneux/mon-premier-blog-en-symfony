@@ -4,6 +4,7 @@
 .PHONY: up up-auto down down-v restart build logs ps
 
 up: ## Start Docker containers
+	sudo systemctl stop postgresql
 	docker-compose --env-file .env.local up -d
 	@echo "Site web disponible: http://localhost:8080"
 
@@ -43,6 +44,9 @@ update: ## Update dependencies
 
 assets: ## Install assets
 	docker-compose --env-file .env.local exec web php bin/console asset-map:compile
+
+importmap:
+	docker-compose --env-file .env.local exec web php bin/console importmap:install
 
 migrations: ## Run database migrations
 	docker-compose --env-file .env.local exec web php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
@@ -91,3 +95,4 @@ help: ## Display this help message
 	@cat $(MAKEFILE_LIST) | grep -e "^[a-zA-Z_\-]*: *.*## *" | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .DEFAULT_GOAL := help
+

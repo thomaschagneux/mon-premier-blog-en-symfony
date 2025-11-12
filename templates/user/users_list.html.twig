@@ -2,10 +2,10 @@
 
 {% block title %}Liste des utilisateurs{% endblock %}
 
-{% block admin_content %}
+{% block body %}
     {{ parent() }}
     <div class="w-full px-4 py-6">
-        <table id="users-table" class="w-full table-auto">
+        <table id="users-table" class="w-full table-auto datatables">
             <thead class="bg-gray-50">
             <tr>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
