@@ -1,17 +1,13 @@
-###> PhpStorm ###
-/.idea/
-/.idea/*
-/.junie/
-/.junie/*
-###< PhpStorm ###
+# PhpStorm
+.idea/
+.junie/
 
-###> Configuration ###
+# Configuration
 /public/.htaccess
 /php.ini
 /.docker-compose.env
-###< Configuration ###
 
-###> symfony/framework-bundle ###
+# symfony/framework-bundle
 /.env.local
 /.env.local.php
 /.env.*.local
@@ -19,28 +15,21 @@
 /public/bundles/
 /var/
 /vendor/
-###< symfony/framework-bundle ###
 
-###> phpunit/phpunit ###
-/phpunit.xml
-/.phpunit.cache/
-###< phpunit/phpunit ###
+# node
+node_modules/
 
-###> symfony/asset-mapper ###
+# symfony/asset-mapper
 /public/assets/
 /assets/vendor/
-###< symfony/asset-mapper ###
 
-###> phpstan/phpstan ###
+# phpunit/phpunit
+/phpunit.xml
+/.phpunit.cache/
+
+# phpstan/phpstan
 phpstan.neon
-###< phpstan/phpstan ###
 
-###> friendsofphp/php-cs-fixer ###
+# friendsofphp/php-cs-fixer
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
-###< friendsofphp/php-cs-fixer ###
-
-###> node ###
-/node_modules/
-/node_modules/*
-###< node ###

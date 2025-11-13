@@ -1,19 +1,20 @@
 import $ from 'jquery';
-import './component/datatables/datatables.min.js';
-import './component/datatables/datatables.min.css';
+import 'datatables.net-bs5';
+import 'datatables.net-responsive-bs5';
 
+import './styles/dataTables.bootstrap5.min.css';
+import './styles/responsive.bootstrap5.min.css';
 
-// Ensure jQuery is available globally for the plugin
 window.$ = window.jQuery = $;
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const $tables = $('.datatables');
     if ($tables.length) {
+        $tables.each(function () {
+            this.classList.add('table', 'table-striped', 'table-bordered');
+        });
         $tables.DataTable({
-            language: {
-                url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/fr-FR.json'
-            },
-            order: [[1, 'asc']]
+            responsive: true
         });
     }
 });

@@ -1,45 +1,38 @@
-{% extends 'base.html.twig' %}
+{% extends 'base/base_admin.html.twig' %}
 
 {% block title %}Liste des utilisateurs{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-{% endblock %}
-
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="container-fluid">
-    <table id="users-table" class="table datatables display" style="width:100%">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Prénom</th>
-                <th scope="col">Nom</th>
-                <th scope="col">Email</th>
-                <th scope="col">Rôle</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td></td>
-                <td>{{ user.firstName }}</td>
-                <td>{{ user.lastName }}</td>
-                <td>{{ user.email }}</td>
-                <td>{% for role in user.roles %}
-                        {{ role }}{% if not loop.last %}, {% endif %}
-                    {% endfor %}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-{% endblock %}
-
-{% block javascripts %}
     {{ parent() }}
+    <div class="w-full px-4 py-6">
+        <table id="users-table" class="w-full table-auto datatables">
+            <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prénom</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nom</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rôle</th>
+            </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+            {% for user in users %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ loop.index }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.firstName }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.lastName }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.email }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {% for role in user.roles %}
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {{ role }}
+                        </span>
+                            {% if not loop.last %} {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
