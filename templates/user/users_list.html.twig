@@ -4,7 +4,10 @@
 
 {% block body %}
     {{ parent() }}
-    <div class="w-full px-4 py-6">
+    <div class="buttons mb-3 d-flex justify-content-end">
+        <a href="{{ path('user_new') }}" class="btn btn-primary">Ajouter</a>
+    </div>
+    <div class="users-table">
         <table id="users-table" class="w-full table-auto datatables">
             <thead class="bg-gray-50">
             <tr>

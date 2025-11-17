@@ -1,0 +1,31 @@
+{% block form_row %}
+    <div class="mb-3">
+        {{ form_label(form, null, {
+            'label_attr': {'class': 'form-label'}
+        }) }}
+        {{ form_widget(form, {
+            'attr': {'class': 'form-control'}
+        }) }}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
+
+{% block button_row %}
+    <div class="mb-3">
+        {{ form_widget(form, {
+            'attr': {'class': 'btn btn-primary'}
+        }) }}
+    </div>
+{% endblock %}
+
+{% block checkbox_row %}
+    <div class="form-check mb-3">
+        {{ form_widget(form, {
+            'attr': {'class': 'form-check-input'}
+        }) }}
+        {{ form_label(form, null, {
+            'label_attr': {'class': 'form-check-label'}
+        }) }}
+        {{ form_errors(form) }}
+    </div>
+{% endblock %}
