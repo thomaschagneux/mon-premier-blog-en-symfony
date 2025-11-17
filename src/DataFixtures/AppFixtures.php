@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Picture;
 use App\Entity\User;
+use App\Enum\UserRole;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -37,7 +38,7 @@ class AppFixtures extends Fixture
         $user1->setFirstName('Admin');
         $user1->setLastName('System');
         $user1->setPassword($this->passwordHasher->hashPassword(user: $user1, plainPassword: 'pass123'));
-        $user1->setRoles(['ROLE_ADMIN']);
+        $user1->setRole(UserRole::ROLE_ADMIN);
         $users[] = $user1;
         $manager->persist($user1);
         unset($user1);
@@ -47,12 +48,12 @@ class AppFixtures extends Fixture
         $user2->setFirstName('John');
         $user2->setLastName('Doe');
         $user2->setPassword($this->passwordHasher->hashPassword(user: $user2, plainPassword: 'pass123'));
-        $user2->setRoles(['ROLE_USER']);
+        $user2->setRole(UserRole::ROLE_USER);
         $users[] = $user2;
         $manager->persist($user2);
         unset($user2);
 
-        for ($i = 0; $i < 5; ++$i) {
+        for ($i = 0; $i < 1; ++$i) {
             $user = new User();
             $user->setEmail($faker->unique()->safeEmail);
             $user->setFirstName($faker->firstName);

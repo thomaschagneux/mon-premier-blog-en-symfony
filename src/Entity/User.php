@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\UserRole;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,11 +25,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'email', type: Types::STRING, length: 180, unique: true, nullable: false)]
     private string $email;
 
-    /**
-     * @var list<string> The user roles
-     */
-    #[ORM\Column(name: 'roles', type: Types::JSON, nullable: false)]
-    private array $roles = [];
+    #[ORM\Column(name: 'role', type: Types::STRING, length: 20, nullable: false, enumType: UserRole::class)]
+    private UserRole $role = UserRole::ROLE_USER;
 
     /**
      * @var string The hashed password
@@ -47,7 +45,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->roles = ['ROLE_USER'];
+        $this->role = UserRole::ROLE_USER;
     }
 
     public function getId(): int
@@ -91,17 +89,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-
-        return array_unique($roles);
+        // Symfony expects an array of strings; expose the enum value.
+        return [$this->role->value];
     }
 
-    /**
-     * @param list<string> $roles
-     */
-    public function setRoles(array $roles): static
+    public function getRole(): UserRole
     {
-        $this->roles = $roles;
+        return $this->role;
+    }
+
+    public function setRole(?UserRole $role): static
+    {
+        $this->role = $role ?? UserRole::ROLE_USER;
 
         return $this;
     }

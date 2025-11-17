@@ -1,0 +1,33 @@
+{% extends 'base/base_admin.html.twig' %}
+
+{% block title %} Ajouter un utilisateur{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="form">
+            {{ form_start(add_user_form) }}
+
+            <div class="row">
+                <div class="col col-12 col-md-6">{{ form_row(add_user_form.firstName) }}</div>
+                <div class="col col-12 col-md-6">{{ form_row(add_user_form.lastName) }}</div>
+            </div>
+
+            <div class="row">
+                <div class="col col-12 col-md-6">{{ form_row(add_user_form.email) }}</div>
+                <div class="col col-12 col-md-6">{{ form_row(add_user_form.role) }}</div>
+            </div>
+
+            <div class="row">
+                <div class="col col-12 col-md-6">{{ form_row(add_user_form.password.first) }}</div>
+                <div class="col col-12 col-md-6">{{ form_row(add_user_form.password.second) }}</div>
+            </div>
+
+            <div class="d-flew justify-content-end">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            {{ form_end(add_user_form) }}
+        </div>
+
+    </div>
+
+{% endblock %}

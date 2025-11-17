@@ -19,6 +19,13 @@
 {% include 'base/navbar_admin.html.twig' %}
 
 <main class="container my-4">
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
     {% block body %}{% endblock %}
 </main>
 
