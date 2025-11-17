@@ -43,6 +43,7 @@ class UserType extends AbstractType
                     'label' => 'Confirmer votre mot de passe',
                     'attr' => [],
                 ],
+                'required' => $options['form_mode'] === 'add',
             ])
             ->add('role', ChoiceType::class, [
                 'label' => 'Rôle',
