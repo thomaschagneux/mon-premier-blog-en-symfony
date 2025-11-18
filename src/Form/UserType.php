@@ -12,45 +12,46 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserType extends AbstractType
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     * @return void
-     */
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+    ) {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('firstName', TextType::class, [
-                'label' => 'Prénom',
+                'label' => $this->translator->trans('users.property.first_name'),
                 'attr' => [],
             ])
             ->add('lastName', TextType::class, [
-                'label' => 'Nom',
+                'label' => $this->translator->trans('users.property.last_name'),
             ])
             ->add('email', EmailType::class, [
-                'label' => 'Email',
+                'label' => $this->translator->trans('users.property.email'),
             ])
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
-                    'label' => 'Entrez votre mot de passe',
+                    'label' => $this->translator->trans('users.form.password.first'),
                     'attr' => [],
                 ],
                 'second_options' => [
-                    'label' => 'Confirmer votre mot de passe',
+                    'label' => $this->translator->trans('users.form.password.second'),
                     'attr' => [],
                 ],
-                'required' => $options['form_mode'] === 'add',
+                'required' => 'add' === $options['form_mode'],
             ])
             ->add('role', ChoiceType::class, [
-                'label' => 'Rôle',
+                'label' => $this->translator->trans('users.property.role'),
                 'choices' => UserRole::cases(),
-                'choice_label' => fn (UserRole $role) => $role->label(),
+                'choice_label' => fn (UserRole $role) => $this->translator->trans($role->label()),
                 'choice_value' => fn (?UserRole $role) => $role?->value,
-                'placeholder' => 'Sélectionnez un rôle',
+                'placeholder' => $this->translator->trans('users.form.role.placeholder'),
                 'required' => false,
             ]);
     }

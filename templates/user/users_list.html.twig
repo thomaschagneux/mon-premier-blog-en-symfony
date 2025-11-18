@@ -5,7 +5,7 @@
 {% block body %}
     {{ parent() }}
     <div class="buttons mb-3 d-flex justify-content-end">
-        <a href="{{ path('user_new') }}" class="btn btn-primary">Ajouter</a>
+        <a href="{{ path('user_new') }}" class="btn btn-primary">{{ 'common.button.add' | trans }}</a>
     </div>
     <div class="users-table">
         <table id="users-table" class="w-full table-auto datatables">

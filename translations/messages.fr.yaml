@@ -1,0 +1,29 @@
+common:
+    site:
+        title: 'Mon premier blog en symfony'
+    button:
+        add: 'Ajouter'
+success:
+    users:
+        add: "L'utilisateur a bien été créé."
+enums:
+    user_role:
+        role_user: 'Utilisateur'
+        role_admin: 'Administrateur'
+users:
+    list:
+        title: 'Liste de utilisateurs'
+    property:
+        first_name: 'Prénom'
+        last_name : 'Nom'
+        email: 'Email'
+        role: 'Rôle'
+        password: 'Mot de passe'
+    form:
+        password:
+            first: 'Entrez votre mot de passe'
+            second: 'Confirmer votre mot de passe'
+        role:
+            placeholder: 'Sélectionnez un rôle'
+        button:
+            submit_add: 'Ajouter'
