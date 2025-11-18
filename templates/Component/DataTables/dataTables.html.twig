@@ -1,0 +1,26 @@
+<div class="table-container table-responsive my-4">
+    <table id="users-dataTable" class="datatables custom-table table table-bordered table-hover table-striped align-middle">
+        <thead class="custom-table-head">
+        <tr>
+            {% for column in columns %}
+                <th class="{{ column.class }}">{{ column.title }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in rows %}
+            <tr>
+                {% for column in columns %}
+                    <td>
+                        {% if column.key == 'actions' or column.key == 'action' or column.key == 'validated' %}
+                            {{ row[column.key] | raw }}
+                        {% else %}
+                            {{ row[column.key] }}
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
