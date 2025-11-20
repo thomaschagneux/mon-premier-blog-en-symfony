@@ -19,7 +19,6 @@ final class UserController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly UserRepository $userRepository,
         private readonly UserDataTableService $userDataTableService,
-
     ) {
     }
 
@@ -27,6 +26,7 @@ final class UserController extends AbstractController
     public function index(): Response
     {
         $table = $this->userDataTableService->getTableContent();
+
         return $this->render('user/users_list.html.twig', [
             'table' => $table,
         ]);

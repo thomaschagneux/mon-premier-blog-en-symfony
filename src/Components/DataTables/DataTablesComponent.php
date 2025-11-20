@@ -14,9 +14,8 @@ class DataTablesComponent
     private array $columns = [];
 
     public function __construct(
-        array $columns
-    )
-    {
+        array $columns,
+    ) {
         $this->columns = $columns;
     }
 

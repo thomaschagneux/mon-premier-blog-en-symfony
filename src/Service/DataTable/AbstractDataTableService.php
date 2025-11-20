@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service\DataTable;
 
 use App\Components\DataTables\Column;
@@ -14,37 +15,36 @@ use Twig\Environment;
 abstract class AbstractDataTableService
 {
     /**
-     * @var Environment The Twig environment used for rendering templates.
+     * @var Environment the Twig environment used for rendering templates
      */
     protected Environment $twig;
 
     /**
-     * @var UrlGeneratorInterface The URL generator for creating links.
+     * @var UrlGeneratorInterface the URL generator for creating links
      */
     protected UrlGeneratorInterface $urlGenerator;
 
     /**
-     * @var array<int, array<string, mixed>> The configuration of table columns.
+     * @var array<int, array<string, mixed>> the configuration of table columns
      */
     protected array $columns = [];
 
     /**
-     * @var array<string, string> A mapping of column keys to their titles.
+     * @var array<string, string> a mapping of column keys to their titles
      */
     protected array $columnMappings = [];
 
     /**
      * AbstractDataTableService constructor.
      *
-     * @param Environment $twig The Twig environment.
-     * @param UrlGeneratorInterface $urlGenerator The URL generator.
+     * @param Environment           $twig         the Twig environment
+     * @param UrlGeneratorInterface $urlGenerator the URL generator
      */
     public function __construct(
         Environment $twig,
         UrlGeneratorInterface $urlGenerator,
         private readonly TranslatorInterface $translator,
-    )
-    {
+    ) {
         $this->twig = $twig;
         $this->urlGenerator = $urlGenerator;
         $this->initializeColumns();
@@ -67,10 +67,10 @@ abstract class AbstractDataTableService
         $this->columns = [];
         foreach ($this->getColumnsConfig() as $column) {
             $this->columns[] = [
-                'title' => $this->translator->trans($this->getEntityName() . '.property.' . $column->getKey()),
-                'key'       => $column->getKey(),
+                'title' => $this->translator->trans($this->getEntityName().'.property.'.$column->getKey()),
+                'key' => $column->getKey(),
                 'formatter' => $column->getFormatter(),
-                'class'     => $column->getClass(),
+                'class' => $column->getClass(),
             ];
         }
     }
@@ -94,6 +94,7 @@ abstract class AbstractDataTableService
             }
             $rows[] = $row;
         }
+
         return $this->renderTable($rows);
     }
 
@@ -103,31 +104,35 @@ abstract class AbstractDataTableService
         foreach ($rows as $row) {
             $table->addRow($row);
         }
+
         return $table->render($this->twig);
     }
 
     /**
      * Generates an HTML link.
      *
-     * @param string $route The route name.
-     * @param string $label The link label.
-     * @param string|null $class The CSS class for the link.
-     * @param array $params Parameters for the route.
-     * @return string The generated link HTML.
+     * @param string      $route  the route name
+     * @param string      $label  the link label
+     * @param string|null $class  the CSS class for the link
+     * @param array       $params parameters for the route
+     *
+     * @return string the generated link HTML
      */
     protected function getLink(string $route, string $label, ?string $class = null, array $params = []): string
     {
         $url = $this->urlGenerator->generate($route, $params, UrlGeneratorInterface::ABSOLUTE_PATH);
-        $class = $class ? 'class="' . $class . '"' : '';
+        $class = $class ? 'class="'.$class.'"' : '';
+
         return sprintf('<a href="%s" %s>%s</a>', $url, $class, $label);
     }
 
     /**
      * Generates an HTML "Edit" link.
      *
-     * @param string $route The route name.
-     * @param array $params Parameters for the route.
-     * @return string The generated "Edit" link HTML.
+     * @param string $route  the route name
+     * @param array  $params parameters for the route
+     *
+     * @return string the generated "Edit" link HTML
      */
     protected function getEditLink(string $route, array $params = []): string
     {
@@ -137,9 +142,10 @@ abstract class AbstractDataTableService
     /**
      * Generates an HTML "Delete" link.
      *
-     * @param string $route The route name.
-     * @param array $params Parameters for the route.
-     * @return string The generated "Delete" link HTML.
+     * @param string $route  the route name
+     * @param array  $params parameters for the route
+     *
+     * @return string the generated "Delete" link HTML
      */
     protected function getDeleteLink(string $route, array $params = []): string
     {
@@ -149,9 +155,10 @@ abstract class AbstractDataTableService
     /**
      * Generates an HTML "Show" link.
      *
-     * @param string $route The route name.
-     * @param array $params Parameters for the route.
-     * @return string The generated "Show" link HTML.
+     * @param string $route  the route name
+     * @param array  $params parameters for the route
+     *
+     * @return string the generated "Show" link HTML
      */
     protected function getShowLink(string $route, array $params = []): string
     {

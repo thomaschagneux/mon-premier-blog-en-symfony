@@ -16,8 +16,7 @@ class UserDataTableService extends AbstractDataTableService
         UrlGeneratorInterface $urlGenerator,
         TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
-    )
-    {
+    ) {
         parent::__construct($twig, $urlGenerator, $translator);
     }
 
@@ -36,12 +35,12 @@ class UserDataTableService extends AbstractDataTableService
             ),
             new Column(
                 'full_name',
-                fn(User $user) => $user->getFullName(),
+                fn (User $user) => $user->getFullName(),
                 'column-name'
             ),
             new Column(
                 'email',
-                fn(User $user) => $user->getEmail(),
+                fn (User $user) => $user->getEmail(),
                 'column-email'
             ),
         ];
@@ -57,4 +56,3 @@ class UserDataTableService extends AbstractDataTableService
         return $this->renderTableContent();
     }
 }
-

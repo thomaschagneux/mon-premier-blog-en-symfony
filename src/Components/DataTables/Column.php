@@ -2,7 +2,6 @@
 
 namespace App\Components\DataTables;
 
-
 class Column
 {
     private string $key;
@@ -18,8 +17,7 @@ class Column
         string $key,
         ?callable $formatter,
         ?string $class,
-    )
-    {
+    ) {
         $this->key = $key;
         $this->formatter = $formatter;
         $this->class = $class;
@@ -39,5 +37,4 @@ class Column
     {
         return $this->class;
     }
-
 }
