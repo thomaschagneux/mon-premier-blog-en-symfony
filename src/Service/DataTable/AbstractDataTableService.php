@@ -1,13 +1,11 @@
 <?php
-namespace App\Services\DataTables;
+namespace App\Service\DataTable;
 
+use App\Components\DataTables\Column;
 use App\Components\DataTables\DataTablesComponent;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 /**
  * Class AbstractDataTableService
@@ -44,6 +42,7 @@ abstract class AbstractDataTableService
     public function __construct(
         Environment $twig,
         UrlGeneratorInterface $urlGenerator,
+        private readonly TranslatorInterface $translator,
     )
     {
         $this->twig = $twig;
@@ -51,76 +50,58 @@ abstract class AbstractDataTableService
         $this->initializeColumns();
     }
 
+    abstract protected function getEntityName(): string;
+
     /**
-     * Initializes the columns based on columnMappings.
+     * @return array<Column>
      */
+    abstract protected function getColumnsConfig(): array;
+
+    /**
+     * @return array<int, object>
+     */
+    abstract protected function getData(): array;
+
     protected function initializeColumns(): void
     {
-        foreach ($this->columnMappings as $key => $title) {
+        $this->columns = [];
+        foreach ($this->getColumnsConfig() as $column) {
             $this->columns[] = [
-                'title'     => $title,
-                'key'       => $key,
-                'formatter' => $this->getColumnFormatter($key),
-                'class'  => $this->getColumnClass($key),
+                'title' => $this->translator->trans($this->getEntityName() . '.property.' . $column->getKey()),
+                'key'       => $column->getKey(),
+                'formatter' => $column->getFormatter(),
+                'class'     => $column->getClass(),
             ];
         }
     }
 
-    /**
-     * Returns the CSS class for a given column key.
-     *
-     * @param string $key The column key.
-     * @return string The CSS class name.
-     */
-    protected function getColumnClass(string $key): string
-    {
-        return 'column-' . $key;
-    }
-
-    /**
-     * Returns a formatter callable for a given column key.
-     *
-     * @param string $key The column key.
-     * @return callable|null The formatter callable, or null if none is defined.
-     */
-    protected function getColumnFormatter(string $key): ?callable
-    {
-        return null;
-    }
-
-    /**
-     * Creates a new DataTablesComponent instance with the configured columns.
-     *
-     * @return DataTablesComponent The DataTables component instance.
-     */
     protected function createDataTableComponent(): DataTablesComponent
     {
         return new DataTablesComponent($this->columns);
     }
 
-    /**
-     * Renders the DataTable with the given rows.
-     *
-     * @param array<int, array<string, mixed>> $rows The rows to render in the table.
-     * @return string The rendered table HTML.
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
-     */
+    public function renderTableContent(): string
+    {
+        $data = $this->getData();
+        $rows = [];
+        foreach ($data as $item) {
+            $row = [];
+            foreach ($this->getColumnsConfig() as $column) {
+                $key = $column->getKey();
+                $formatter = $column->getFormatter();
+                $value = $formatter ? $formatter($item) : ($item->{$key} ?? '');
+                $row[$key] = $value;
+            }
+            $rows[] = $row;
+        }
+        return $this->renderTable($rows);
+    }
+
     public function renderTable(array $rows): string
     {
         $table = $this->createDataTableComponent();
         foreach ($rows as $row) {
-            $formattedRow = [];
-            foreach ($this->columns as $column) {
-                $key = $column['key'];
-                $value = $row[$key] ?? '';
-                if (is_callable($column['formatter'])) {
-                    $value = call_user_func($column['formatter'], $value, $row);
-                }
-                $formattedRow[$key] = $value;
-            }
-            $table->addRow($formattedRow);
+            $table->addRow($row);
         }
         return $table->render($this->twig);
     }

@@ -2,10 +2,11 @@
 
 namespace App\Service\DataTable;
 
+use App\Components\DataTables\Column;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Services\DataTables\AbstractDataTableService;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class UserDataTableService extends AbstractDataTableService
@@ -13,39 +14,47 @@ class UserDataTableService extends AbstractDataTableService
     public function __construct(
         Environment $twig,
         UrlGeneratorInterface $urlGenerator,
+        TranslatorInterface $translator,
         private readonly UserRepository $userRepository,
     )
     {
-        $this->columnMappings = [
-            'name' => 'Nom',
-            'email' => 'email',
+        parent::__construct($twig, $urlGenerator, $translator);
+    }
+
+    protected function getEntityName(): string
+    {
+        return 'users';
+    }
+
+    protected function getColumnsConfig(): array
+    {
+        return [
+            new Column(
+                'action',
+                null,
+                ''
+            ),
+            new Column(
+                'full_name',
+                fn(User $user) => $user->getFullName(),
+                'column-name'
+            ),
+            new Column(
+                'email',
+                fn(User $user) => $user->getEmail(),
+                'column-email'
+            ),
         ];
-        parent::__construct($twig, $urlGenerator);
+    }
+
+    protected function getData(): array
+    {
+        return $this->userRepository->findAll();
     }
 
     public function getTableContent(): string
     {
-        $users = $this->userRepository->findAll();
-        $rows = [];
-        foreach ($users as $user) {
-            $rows[] = [
-                'name' => $user->getFirstName() . ' ' . $user->getLastName(),
-                'email'      => $user->getEmail(),
-            ];
-        }
-
-        return $this->renderTable($rows);
+        return $this->renderTableContent();
     }
-
-    protected function getColumnClass(string $key): string
-    {
-        $customClasses = [
-            'name'       => 'column-name',
-            'email'      => 'column-email',
-        ];
-
-        return $customClasses[$key] ?? parent::getColumnClass($key);
-    }
-
 }
 

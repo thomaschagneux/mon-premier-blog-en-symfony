@@ -172,4 +172,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getFullName(): ?string
+    {
+        return mb_convert_case($this->getFirstName() . ' ' . $this->getLastName(), MB_CASE_TITLE, "UTF-8");
+    }
 }
