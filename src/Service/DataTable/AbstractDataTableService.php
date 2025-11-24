@@ -25,7 +25,7 @@ abstract class AbstractDataTableService
     protected UrlGeneratorInterface $urlGenerator;
 
     /**
-     * @var array<int, array<string, mixed>> the configuration of table columns
+     * @var array<Column> the configuration of table columns
      */
     protected array $columns = [];
 
@@ -66,12 +66,14 @@ abstract class AbstractDataTableService
     {
         $this->columns = [];
         foreach ($this->getColumnsConfig() as $column) {
-            $this->columns[] = [
-                'title' => $this->translator->trans($this->getEntityName().'.property.'.$column->getKey()),
-                'key' => $column->getKey(),
-                'formatter' => $column->getFormatter(),
-                'class' => $column->getClass(),
-            ];
+            $col = new Column(
+                $column->getKey(),
+                $column->getFormatter(),
+                $column->getClass(),
+            );
+            $col->setTitle($this->translator->trans($this->getEntityName().'.property.'.$column->getKey()));
+
+            $this->columns[] = $col;
         }
     }
 
@@ -111,10 +113,10 @@ abstract class AbstractDataTableService
     /**
      * Generates an HTML link.
      *
-     * @param string      $route  the route name
-     * @param string      $label  the link label
-     * @param string|null $class  the CSS class for the link
-     * @param array       $params parameters for the route
+     * @param string                               $route  the route name
+     * @param string                               $label  the link label
+     * @param string|null                          $class  the CSS class for the link
+     * @param array<string, string|int|float|bool> $params parameters for the route
      *
      * @return string the generated link HTML
      */
@@ -129,8 +131,8 @@ abstract class AbstractDataTableService
     /**
      * Generates an HTML "Edit" link.
      *
-     * @param string $route  the route name
-     * @param array  $params parameters for the route
+     * @param string                               $route  the route name
+     * @param array<string, string|int|float|bool> $params parameters for the route
      *
      * @return string the generated "Edit" link HTML
      */
@@ -142,8 +144,8 @@ abstract class AbstractDataTableService
     /**
      * Generates an HTML "Delete" link.
      *
-     * @param string $route  the route name
-     * @param array  $params parameters for the route
+     * @param string                               $route  the route name
+     * @param array<string, string|int|float|bool> $params parameters for the route
      *
      * @return string the generated "Delete" link HTML
      */
@@ -155,8 +157,8 @@ abstract class AbstractDataTableService
     /**
      * Generates an HTML "Show" link.
      *
-     * @param string $route  the route name
-     * @param array  $params parameters for the route
+     * @param string                               $route  the route name
+     * @param array<string, string|int|float|bool> $params parameters for the route
      *
      * @return string the generated "Show" link HTML
      */

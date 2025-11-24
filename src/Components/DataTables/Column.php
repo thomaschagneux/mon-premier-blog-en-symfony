@@ -6,10 +6,12 @@ class Column
 {
     private string $key;
 
+    private ?string $title = null;
+
     /**
      * @var callable|null
      */
-    private mixed $formatter = null;
+    private $formatter;
 
     private ?string $class = null;
 
@@ -26,6 +28,16 @@ class Column
     public function getKey(): string
     {
         return $this->key;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): void
+    {
+        $this->title = $title;
     }
 
     public function getFormatter(): mixed
