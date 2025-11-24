@@ -85,12 +85,15 @@ abstract class AbstractDataTableService
     public function renderTableContent(): string
     {
         $data = $this->getData();
+        /** @var array<array<string,string>> $rows */
         $rows = [];
         foreach ($data as $item) {
+            /** @var array<string,string> $row */
             $row = [];
             foreach ($this->getColumnsConfig() as $column) {
                 $key = $column->getKey();
                 $formatter = $column->getFormatter();
+                /** @var string $value */
                 $value = $formatter ? $formatter($item) : ($item->{$key} ?? '');
                 $row[$key] = $value;
             }
@@ -100,6 +103,9 @@ abstract class AbstractDataTableService
         return $this->renderTable($rows);
     }
 
+    /**
+     * @param array<array<string,string>> $rows
+     */
     public function renderTable(array $rows): string
     {
         $table = $this->createDataTableComponent();

@@ -40,7 +40,7 @@ class Column
         $this->title = $title;
     }
 
-    public function getFormatter(): mixed
+    public function getFormatter(): ?callable
     {
         return $this->formatter;
     }
