@@ -14,8 +14,10 @@ users:
     list:
         title: 'Liste de utilisateurs'
     property:
+        action: 'Action'
         first_name: 'Prénom'
         last_name : 'Nom'
+        full_name : 'Nom'
         email: 'Email'
         role: 'Rôle'
         password: 'Mot de passe'

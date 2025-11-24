@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Repository\UserRepository;
+use App\Service\DataTable\UserDataTableService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,16 +15,18 @@ use Symfony\Component\Routing\Attribute\Route;
 final class UserController extends AbstractController
 {
     public function __construct(
-        private readonly UserRepository $userRepository,
         private readonly EntityManagerInterface $entityManager,
+        private readonly UserDataTableService $userDataTableService,
     ) {
     }
 
     #[Route('/', name: 'user_list')]
     public function index(): Response
     {
+        $table = $this->userDataTableService->getTableContent();
+
         return $this->render('user/users_list.html.twig', [
-            'users' => $this->userRepository->findAll(),
+            'table' => $table,
         ]);
     }
 
