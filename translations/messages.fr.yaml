@@ -1,4 +1,5 @@
 common:
+    image_alt: "Cette image n'a pas réussi à charger"
     site:
         title: 'Mon premier blog en symfony'
     button:
@@ -8,8 +9,8 @@ success:
         add: "L'utilisateur a bien été créé."
 enums:
     user_role:
-        role_user: 'Utilisateur'
-        role_admin: 'Administrateur'
+        ROLE_USER: 'Utilisateur'
+        ROLE_ADMIN: 'Administrateur'
 users:
     list:
         title: 'Liste de utilisateurs'
@@ -29,3 +30,7 @@ users:
             placeholder: 'Sélectionnez un rôle'
         button:
             submit_add: 'Ajouter'
+    profile:
+        picture: 'Photo de profil'
+        alt_picture: 'Photo de '
+        informations: 'Informations utilisateur'
