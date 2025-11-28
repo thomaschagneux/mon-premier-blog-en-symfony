@@ -90,6 +90,6 @@ class ImageComponent
             $styles[] = 'object-fit: cover';
         }
 
-        return implode('; ', $styles).(empty($styles) ? '' : ';');
+        return implode('; ', $styles).';';
     }
 }
