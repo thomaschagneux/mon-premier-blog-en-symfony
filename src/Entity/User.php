@@ -8,6 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\String\UnicodeString;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -175,6 +176,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getFullName(): ?string
     {
-        return mb_convert_case($this->getFirstName().' '.$this->getLastName(), MB_CASE_TITLE, 'UTF-8');
+        $firstName = (new UnicodeString($this->getFirstName() ?? ''))->title()->toString();
+        $lastName = (new UnicodeString($this->getLastName() ?? ''))->title()->toString();
+
+        return trim(sprintf('%s %s', $firstName, $lastName)) ?: null;
     }
 }

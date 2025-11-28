@@ -30,6 +30,14 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/profile/{id}', name: 'user_profile')]
+    public function showUser(User $user): Response
+    {
+        return $this->render('user/user_profile.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
     #[Route('/new', name: 'user_new')]
     public function createUser(
         Request $request,

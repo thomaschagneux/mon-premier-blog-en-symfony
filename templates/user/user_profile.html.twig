@@ -1,0 +1,45 @@
+{% extends 'base/base_admin.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-12 col-lg-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <img src="{{ asset(user.picture.pathName ?? '' ~ '/' ~ user.picture.fileName ?? '') }}">
+
+                    <h5 class="card-title mb-1">
+                        {{ user.fullName ?? user.email }}
+                    </h5>
+                    <p class="text-muted mb-0">{{ user.email }}</p>
+                    <span class="badge text-bg-secondary mt-2">{{ user.role | translate_enum }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-8 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <strong>{{ 'users.profile.informations' | trans }}</strong>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+
+                        <dt class="col-sm-4">Prénom</dt>
+                        <dd class="col-sm-8">{{ user.firstName ?? '—' }}</dd>
+
+                        <dt class="col-sm-4">Nom</dt>
+                        <dd class="col-sm-8">{{ user.lastName ?? '—' }}</dd>
+
+                        <dt class="col-sm-4">Email</dt>
+                        <dd class="col-sm-8"><a href="mailto:{{ user.email }}">{{ user.email }}</a></dd>
+
+                    </dl>
+                </div>
+                <div class="card-footer d-flex gap-2">
+                    <a href="{{ path('user_list') }}" class="btn btn-outline-secondary">← Retour à la liste</a>
+                    {# Bouton d'édition à ajouter quand une route d'édition existera #}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
