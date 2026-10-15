@@ -1,0 +1,11 @@
+users:
+    validation:
+        email:
+            not_blank: "L'adresse e-mail est obligatoire."
+            invalid: "L'adresse e-mail n'est pas valide."
+            unique: "Cette adresse e-mail est déjà utilisée."
+            max_length: "L'adresse e-mail ne peut pas dépasser {{ limit }} caractères."
+            min_length: "L'adresse e-mail doit contenir au moins {{ limit }} caractères."
+        password:
+            not_blank: "Le mot de passe est obligatoire."
+            min_length: "Le mot de passe doit contenir au moins {{ limit }} caractères."

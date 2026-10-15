@@ -1,36 +1,44 @@
 common:
     image_alt: "Cette image n'a pas réussi à charger"
     site:
-        title: 'Mon premier blog en symfony'
+        title: "Mon premier blog en symfony"
     button:
-        add: 'Ajouter'
+        add: "Ajouter"
 success:
     users:
         add: "L'utilisateur a bien été créé."
+error:
+    users:
+        add: "Une erreur est survenue lors de la création de l'utilisateur."
 enums:
     user_role:
-        ROLE_USER: 'Utilisateur'
-        ROLE_ADMIN: 'Administrateur'
+        ROLE_USER: "Utilisateur"
+        ROLE_ADMIN: "Administrateur"
 users:
     list:
-        title: 'Liste de utilisateurs'
+        title: "Liste de utilisateurs"
     property:
-        action: 'Action'
-        first_name: 'Prénom'
-        last_name : 'Nom'
-        full_name : 'Nom'
-        email: 'Email'
-        role: 'Rôle'
-        password: 'Mot de passe'
+        action: "Action"
+        first_name: "Prénom"
+        last_name: "Nom"
+        full_name: "Nom"
+        email: "Email"
+        role: "Rôle"
+        password: "Mot de passe"
     form:
         password:
-            first: 'Entrez votre mot de passe'
-            second: 'Confirmer votre mot de passe'
+            first: "Entrez votre mot de passe"
+            second: "Confirmer votre mot de passe"
         role:
-            placeholder: 'Sélectionnez un rôle'
+            placeholder: "Sélectionnez un rôle"
         button:
-            submit_add: 'Ajouter'
+            submit_add: "Ajouter"
+    validation:
+        email:
+            not_blank: "L'adresse e-mail est obligatoire."
+            invalid: "L'adresse e-mail n'est pas valide."
+            unique: "Cette adresse e-mail est déjà utilisée."
     profile:
-        picture: 'Photo de profil'
-        alt_picture: 'Photo de '
-        informations: 'Informations utilisateur'
+        picture: "Photo de profil"
+        alt_picture: "Photo de "
+        informations: "Informations utilisateur"
