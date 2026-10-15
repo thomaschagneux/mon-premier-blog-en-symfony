@@ -5,10 +5,9 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Service\DataTable\UserDataTableService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\User\UserCreator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -16,8 +15,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class UserController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly UserDataTableService $userDataTableService,
+        private readonly UserCreator $userCreator,
         private readonly TranslatorInterface $translator,
     ) {
     }
@@ -41,35 +40,23 @@ final class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'user_new')]
-    public function createUser(
-        Request $request,
-        UserPasswordHasherInterface $passwordHasher,
-    ): Response {
+    public function createUser(Request $request): Response
+    {
         $user = new User();
         $addUserForm = $this->createForm(UserType::class, $user);
         $addUserForm->handleRequest($request);
 
-        $response = null;
         if ($addUserForm->isSubmitted()) {
             if ($addUserForm->isValid()) {
-                $password = $user->getPassword();
-
-                if (null !== $password) {
-                    $user->setPassword($passwordHasher->hashPassword($user, $password));
-                }
-
+                $this->userCreator->create($user);
                 $this->addSuccess($this->translator->trans('success.users.add'));
-                $this->entityManager->persist($user);
-                $this->entityManager->flush();
 
                 return $this->redirectToRoute('user_list');
             }
-
-            $response = new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        return $this->render('user/user_form_add.html.twig', [
+        return $this->renderFormResponse('user/user_form_add.html.twig', [
             'add_user_form' => $addUserForm->createView(),
-        ], $response);
+        ], $addUserForm);
     }
 }

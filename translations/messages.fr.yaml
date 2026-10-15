@@ -34,10 +34,8 @@ users:
         button:
             submit_add: "Ajouter"
     validation:
-        email:
-            not_blank: "L'adresse e-mail est obligatoire."
-            invalid: "L'adresse e-mail n'est pas valide."
-            unique: "Cette adresse e-mail est déjà utilisée."
+        form:
+            invalid: "Le formulaire contient des erreurs. Veuillez vérifier les champs indiqués."
     profile:
         picture: "Photo de profil"
         alt_picture: "Photo de "

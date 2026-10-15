@@ -1,5 +1,13 @@
 users:
     validation:
+        first_name:
+            not_blank: "Le prénom est obligatoire."
+            min_length: "Le prénom doit contenir au moins {{ limit }} caractères."
+            max_length: "Le prénom ne peut pas dépasser {{ limit }} caractères."
+        last_name:
+            not_blank: "Le nom est obligatoire."
+            min_length: "Le nom doit contenir au moins {{ limit }} caractères."
+            max_length: "Le nom ne peut pas dépasser {{ limit }} caractères."
         email:
             not_blank: "L'adresse e-mail est obligatoire."
             invalid: "L'adresse e-mail n'est pas valide."
@@ -9,3 +17,4 @@ users:
         password:
             not_blank: "Le mot de passe est obligatoire."
             min_length: "Le mot de passe doit contenir au moins {{ limit }} caractères."
+            complexity: "Le mot de passe n'est pas assez complexe (caractères spéciaux, majuscules, minuscules, chiffres, longueur)."

@@ -44,16 +44,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column(name: 'password', type: Types::STRING, nullable: false)]
     #[Assert\NotBlank(message: 'users.validation.password.not_blank')]
-    #[Assert\Length(
-        min: 6,
-        minMessage: 'users.validation.password.min_length',
+    #[Assert\PasswordStrength(
+        minScore: 1,
+        message: 'users.validation.password.complexity',
     )]
     private string $password;
 
     #[ORM\Column(name: 'first_name', type: Types::STRING, length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'users.validation.first_name.not_blank')]
+    #[Assert\Length(
+        min: 3,
+        minMessage: 'users.validation.first_name.min_length',
+        max: 255,
+        maxMessage: 'users.validation.first_name.max_length',
+    )]
     private ?string $firstName = null;
 
     #[ORM\Column(name: 'last_name', type: Types::STRING, length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'users.validation.last_name.not_blank')]
+    #[Assert\Length(
+        min: 3,
+        minMessage: 'users.validation.last_name.min_length',
+        max: 255,
+        maxMessage: 'users.validation.last_name.max_length',
+    )]
     private ?string $lastName = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
@@ -138,7 +152,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
+        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
 
         return $data;
     }

@@ -5,7 +5,13 @@
 {% block body %}
     <div class="container-fluid">
         <div class="form">
-            {{ form_start(add_user_form) }}
+            {{ form_start(add_user_form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+            {% if not add_user_form.vars.valid %}
+                <div class="alert alert-danger" role="alert">
+                    {{ 'users.validation.form.invalid'|trans }}
+                </div>
+            {% endif %}
 
             <div class="row">
                 <div class="col col-12 col-md-6">{{ form_row(add_user_form.firstName) }}</div>
@@ -21,8 +27,8 @@
                 <div class="col col-12 col-md-6">{{ form_row(add_user_form.password) }}</div>
             </div>
 
-            <div class="d-flew justify-content-end">
-                <button type="submit" class="btn btn-primary">{{ 'users.form.button.submit_add' | trans }}</button>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">{{ 'users.form.button.submit_add'|trans }}</button>
             </div>
             {{ form_end(add_user_form) }}
         </div>
