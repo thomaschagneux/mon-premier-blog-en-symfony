@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Enum\FlashType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class AbstractController extends \Symfony\Bundle\FrameworkBundle\Controller\AbstractController
 {
@@ -20,5 +22,18 @@ class AbstractController extends \Symfony\Bundle\FrameworkBundle\Controller\Abst
             FlashType::ERROR->value,
             $message
         );
+    }
+
+    /**
+     * @param array<string, mixed> $parameters
+     */
+    protected function renderFormResponse(string $view, array $parameters, FormInterface $form): Response
+    {
+        $response = null;
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $response = new Response(status: Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $this->render($view, $parameters, $response);
     }
 }

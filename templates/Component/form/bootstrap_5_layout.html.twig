@@ -1,13 +1,39 @@
+{% use 'bootstrap_5_layout.html.twig' %}
+
 {% block form_row %}
     <div class="mb-3">
         {{ form_label(form, null, {
             'label_attr': {'class': 'form-label'}
         }) }}
-        {{ form_widget(form, {
-            'attr': {'class': 'form-control'}
-        }) }}
+        {% set widget_attr = form.vars.attr %}
+        {% if form.vars.errors|length > 0 %}
+            {% set described_by = (widget_attr['aria-describedby']|default('') ~ ' ' ~ form.vars.id ~ '_errors')|trim %}
+            {% set widget_attr = widget_attr|merge({'aria-describedby': described_by}) %}
+        {% endif %}
+        {{ form_widget(form, {'attr': widget_attr}) }}
         {{ form_errors(form) }}
     </div>
+{% endblock %}
+
+{% block repeated_widget %}
+    {% set parent_invalid = errors|length > 0 %}
+    {% set feedback_id = id ~ '_errors' %}
+    {% for child in form %}
+        {% set child_attr = child.vars.attr %}
+        {% if parent_invalid %}
+            {% set child_class = (child_attr.class|default('') ~ ' is-invalid')|trim %}
+            {% set described_by = (child_attr['aria-describedby']|default('') ~ ' ' ~ feedback_id)|trim %}
+            {% set child_attr = child_attr|merge({
+                'class': child_class,
+                'aria-describedby': described_by,
+            }) %}
+        {% endif %}
+        <div class="mb-3">
+            {{ form_label(child, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(child, {'attr': child_attr}) }}
+            {{ form_errors(child) }}
+        </div>
+    {% endfor %}
 {% endblock %}
 
 {% block button_row %}
@@ -19,13 +45,18 @@
 {% endblock %}
 
 {% block checkbox_row %}
-    <div class="form-check mb-3">
-        {{ form_widget(form, {
-            'attr': {'class': 'form-check-input'}
-        }) }}
-        {{ form_label(form, null, {
-            'label_attr': {'class': 'form-check-label'}
-        }) }}
+    <div class="mb-3">
+        {{ form_widget(form) }}
         {{ form_errors(form) }}
     </div>
+{% endblock %}
+
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        <div id="{{ id }}_errors" class="{% if form is not rootform %}invalid-feedback{% else %}alert alert-danger{% endif %} d-block" role="alert">
+            {% for error in errors %}
+                {{ error.message }}{% if not loop.last %}<br>{% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
 {% endblock %}

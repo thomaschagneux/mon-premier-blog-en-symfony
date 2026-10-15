@@ -6,13 +6,16 @@ use App\Enum\UserRole;
 use App\Repository\UserRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\String\UnicodeString;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[UniqueEntity(fields: ['email'], message: 'users.validation.email.unique')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -20,12 +23,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'id', type: Types::INTEGER, nullable: false)]
     protected int $id;
 
-    /**
-     * @var non-empty-string The user's email'
-     */
+    /** @var string The user's email */
     #[ORM\Column(name: 'email', type: Types::STRING, length: 180, unique: true, nullable: false)]
+    #[Assert\NotBlank(message: 'users.validation.email.not_blank')]
+    #[Assert\Email(message: 'users.validation.email.invalid')]
+    #[Assert\Length(
+        max: 180,
+        maxMessage: 'users.validation.email.max_length',
+        min: 5,
+        minMessage: 'users.validation.email.min_length',
+    )]
     private string $email;
-
     #[ORM\Column(name: 'role', type: Types::STRING, length: 20, nullable: false, enumType: UserRole::class)]
     private UserRole $role = UserRole::ROLE_USER;
 
@@ -33,12 +41,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column(name: 'password', type: Types::STRING, nullable: false)]
+    #[Assert\NotBlank(message: 'users.validation.password.not_blank')]
+    #[Assert\PasswordStrength(
+        minScore: 1,
+        message: 'users.validation.password.complexity',
+    )]
     private string $password;
 
     #[ORM\Column(name: 'first_name', type: Types::STRING, length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'users.validation.first_name.not_blank')]
+    #[Assert\Length(
+        min: 3,
+        minMessage: 'users.validation.first_name.min_length',
+        max: 255,
+        maxMessage: 'users.validation.first_name.max_length',
+    )]
     private ?string $firstName = null;
 
     #[ORM\Column(name: 'last_name', type: Types::STRING, length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'users.validation.last_name.not_blank')]
+    #[Assert\Length(
+        min: 3,
+        minMessage: 'users.validation.last_name.min_length',
+        max: 255,
+        maxMessage: 'users.validation.last_name.max_length',
+    )]
     private ?string $lastName = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
@@ -66,10 +93,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setEmail(string $email): static
     {
-        if (empty(trim($email))) {
-            throw new \InvalidArgumentException('L\'email ne peut pas être vide');
-        }
-
         $this->email = trim($email);
 
         return $this;
@@ -82,6 +105,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
+        if ('' === $this->email) {
+            throw new \LogicException('The user email must not be empty.');
+        }
+
         return $this->email;
     }
 
