@@ -24,6 +24,9 @@ class AbstractController extends \Symfony\Bundle\FrameworkBundle\Controller\Abst
         );
     }
 
+    /**
+     * @param array<string, mixed> $parameters
+     */
     protected function renderFormResponse(string $view, array $parameters, FormInterface $form): Response
     {
         $response = null;

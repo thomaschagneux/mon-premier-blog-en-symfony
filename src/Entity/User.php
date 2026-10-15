@@ -23,9 +23,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'id', type: Types::INTEGER, nullable: false)]
     protected int $id;
 
-    /**
-     * @var non-empty-string The user's email'
-     */
+    /** @var string The user's email */
     #[ORM\Column(name: 'email', type: Types::STRING, length: 180, unique: true, nullable: false)]
     #[Assert\NotBlank(message: 'users.validation.email.not_blank')]
     #[Assert\Email(message: 'users.validation.email.invalid')]
@@ -107,6 +105,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
+        if ('' === $this->email) {
+            throw new \LogicException('The user email must not be empty.');
+        }
+
         return $this->email;
     }
 
