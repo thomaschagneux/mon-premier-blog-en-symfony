@@ -35,6 +35,7 @@ users:
             placeholder: "Sélectionnez un rôle"
         button:
             submit_add: "Ajouter"
+            submit_edit: "Modifier"
     validation:
         form:
             invalid: "Le formulaire contient des erreurs. Veuillez vérifier les champs indiqués."
