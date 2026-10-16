@@ -59,4 +59,28 @@ final class UserController extends AbstractController
             'add_user_form' => $addUserForm->createView(),
         ], $addUserForm);
     }
+
+    #[Route('/edit/{id}', name: 'user_edit')]
+    public function editUser(User $user, Request $request): Response
+    {
+        $editUserForm = $this->createForm(UserType::class, $user, [
+            'form_mode' => 'edit',
+        ]);
+        $editUserForm->handleRequest($request);
+
+        if ($editUserForm->isSubmitted()) {
+            if ($editUserForm->isValid()) {
+                $password = $editUserForm->get('password')->getData();
+                $this->userCreator->update($user, is_string($password) ? $password : null);
+                $this->addSuccess($this->translator->trans('success.users.update'));
+
+                return $this->redirectToRoute('user_list');
+            }
+        }
+
+        return $this->renderFormResponse('user/user_form_edit.html.twig', [
+            'edit_user_form' => $editUserForm->createView(),
+            'user' => $user,
+        ], $editUserForm);
+    }
 }

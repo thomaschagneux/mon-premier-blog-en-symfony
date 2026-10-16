@@ -34,6 +34,8 @@ phpstan.neon
 /.php-cs-fixer.php
 /.php-cs-fixer.cache
 
+# Codacy-generated configuration and analysis files
+/.codacy/
 
 #Ignore vscode AI rules
 .github/instructions/codacy.instructions.md
