@@ -83,4 +83,13 @@ final class UserController extends AbstractController
             'user' => $user,
         ], $editUserForm);
     }
+
+    #[Route('/delete/{id}', name: 'user_delete')]
+    public function deleteUser(User $user): Response
+    {
+        $this->userCreator->delete($user);
+        $this->addSuccess($this->translator->trans('success.users.delete'));
+
+        return $this->redirectToRoute('user_list');
+    }
 }
