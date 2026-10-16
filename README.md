@@ -184,6 +184,13 @@ Option A — via Makefile (le plus simple)
    make assets
    ```
 
+Débogage PHP avec Xdebug et VS Code
+- L’image Docker installe Xdebug et le configure pour écouter le débogueur VS Code sur le port 9003.
+- Installez l’extension VS Code « PHP Debug » (`xdebug.php-debug`) si elle n’est pas déjà présente, puis lancez la configuration « Listen for Xdebug (Docker) » depuis le panneau Exécuter et déboguer.
+- Placez un point d’arrêt et ouvrez la page avec `?XDEBUG_TRIGGER=1` (ou activez le déclencheur depuis une extension navigateur compatible Xdebug).
+- Xdebug démarre uniquement avec ce déclencheur pour éviter le ralentissement des requêtes normales.
+- Après modification de l’image ou de `docker/php/php.ini`, reconstruisez et redémarrez le conteneur avec `make build` puis `make up`.
+
 4. (Optionnel) Consulter les logs
    ```bash
    make logs
