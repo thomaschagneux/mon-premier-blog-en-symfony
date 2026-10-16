@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserType extends AbstractType
@@ -45,6 +46,16 @@ class UserType extends AbstractType
                     'attr' => [],
                 ],
                 'required' => 'add' === $options['form_mode'],
+                'mapped' => 'add' === $options['form_mode'],
+                'constraints' => 'edit' === $options['form_mode']
+                    ? [new Assert\When(
+                        expression: 'value != null and value != ""',
+                        constraints: [new Assert\PasswordStrength(
+                            minScore: 1,
+                            message: 'users.validation.password.complexity',
+                        )],
+                    )]
+                    : [],
             ])
             ->add('role', ChoiceType::class, [
                 'label' => $this->translator->trans('users.property.role'),

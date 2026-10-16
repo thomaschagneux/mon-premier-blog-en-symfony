@@ -30,9 +30,10 @@ class UserDataTableService extends AbstractDataTableService
         return [
             new Column(
                 'action',
-                fn (User $user) => $this->getShowLink(
+                fn (User $user) => $this->getActionLinks(
+                    ['id' => $user->getId()],
                     'user_profile',
-                    ['id' => $user->getId()]
+                    'user_edit',
                 ),
                 ''
             ),

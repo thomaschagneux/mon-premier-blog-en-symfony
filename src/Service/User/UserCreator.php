@@ -25,4 +25,13 @@ class UserCreator
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
+
+    public function update(User $user, ?string $password = null): void
+    {
+        if (null !== $password && '' !== $password) {
+            $user->setPassword($this->passwordHasher->hashPassword($user, $password));
+        }
+
+        $this->entityManager->flush();
+    }
 }
