@@ -173,6 +173,9 @@ abstract class AbstractDataTableService
         return $this->getLink($route, 'Voir', 'btn btn-sm btn-primary', $params);
     }
 
+    /**
+     * @param array<string, string|int|float|bool> $params
+     */
     protected function getActionLinks(array $params, ?string $showRoute = null, ?string $editRoute = null, ?string $deleteRoute = null): string
     {
         $showLink = $showRoute ? $this->getShowLink($showRoute, $params) : '';

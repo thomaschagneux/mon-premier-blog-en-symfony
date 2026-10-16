@@ -59,5 +59,4 @@ class UserDataTableService extends AbstractDataTableService
     {
         return $this->renderTableContent();
     }
-
 }
