@@ -34,6 +34,7 @@ class UserDataTableService extends AbstractDataTableService
                     ['id' => $user->getId()],
                     'user_profile',
                     'user_edit',
+                    'user_delete'
                 ),
                 ''
             ),

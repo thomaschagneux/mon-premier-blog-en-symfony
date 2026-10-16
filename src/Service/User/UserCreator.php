@@ -34,4 +34,10 @@ class UserCreator
 
         $this->entityManager->flush();
     }
+
+    public function delete(User $user): void
+    {
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+    }
 }
