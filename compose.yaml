@@ -5,7 +5,7 @@ services:
       - "8080:80"
     volumes:
       - .:/var/www/html
-      - ./php.ini:/usr/local/etc/php/conf.d/symfony-custom.ini
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/symfony-custom.ini
     environment:
       - APP_ENV=dev
     depends_on:

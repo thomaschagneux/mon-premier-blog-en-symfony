@@ -27,7 +27,7 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 COPY . /var/www/html
 
 # Copiez la configuration PHP personnalisée
-COPY php.ini /usr/local/etc/php/conf.d/symfony-custom.ini
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/symfony-custom.ini
 
 # Définissez les permissions
 RUN chown -R www-data:www-data /var/www/html/var
