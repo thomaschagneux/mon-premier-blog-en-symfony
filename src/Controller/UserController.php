@@ -24,6 +24,11 @@ final class UserController extends AbstractController
     #[Route('/', name: 'user_list')]
     public function index(): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            $this->addError($this->translator->trans('error.users.access_denied'));
+
+            return $this->redirectToRoute('home');
+        }
         $table = $this->userDataTableService->getTableContent();
 
         return $this->render('user/users_list.html.twig', [
