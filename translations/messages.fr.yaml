@@ -46,3 +46,13 @@ users:
         picture: "Photo de profil"
         alt_picture: "Photo de "
         informations: "Informations utilisateur"
+security:
+    login:
+        email: "Adresse e-mail"
+        login: "Se connecter"
+        success: "Vous êtes connecté(e) avec succès."
+        error: "Nom d'utilisateur ou mot de passe incorrect."
+    logged_in_as: "Vous êtes connecté(e) en tant que"
+    logout:
+        logout: "Se déconnecter"
+        success: "Vous êtes déconnecté(e) avec succès."

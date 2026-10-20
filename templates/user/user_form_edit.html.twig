@@ -20,7 +20,9 @@
 
             <div class="row">
                 <div class="col col-12 col-md-6">{{ form_row(edit_user_form.email) }}</div>
-                <div class="col col-12 col-md-6">{{ form_row(edit_user_form.role) }}</div>
+                {% if edit_user_form.role is defined and edit_user_form.role is not null %}
+                    <div class="col col-12 col-md-6">{{ form_row(edit_user_form.role) }}</div>
+                {% endif %}
             </div>
 
             <div class="row">

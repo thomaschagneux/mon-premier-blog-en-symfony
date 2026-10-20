@@ -9,7 +9,9 @@ use App\Service\User\UserCreator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
+
 
 #[Route('/admin/user')]
 final class UserController extends AbstractController
@@ -22,12 +24,12 @@ final class UserController extends AbstractController
     }
 
     #[Route('/', name: 'user_list')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
             $this->addError($this->translator->trans('error.users.access_denied'));
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRefererOrRoute($request, 'home');
         }
         $table = $this->userDataTableService->getTableContent();
 
@@ -37,8 +39,14 @@ final class UserController extends AbstractController
     }
 
     #[Route('/profile/{id}', name: 'user_profile')]
-    public function showUser(User $user): Response
+    public function showUser(Request $request, User $user): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN') && $this->getUser() !== $user) {
+            $this->addError($this->translator->trans('error.users.access_denied'));
+
+                return $this->redirectToRefererOrRoute($request, 'home');
+            }
+
         return $this->render('user/user_profile.html.twig', [
             'user' => $user,
         ]);
@@ -68,8 +76,21 @@ final class UserController extends AbstractController
     #[Route('/edit/{id}', name: 'user_edit')]
     public function editUser(User $user, Request $request): Response
     {
+        $resticted = false;
+        
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            if ($this->getUser() !== $user) {
+                $this->addError($this->translator->trans('error.users.access_denied'));
+
+                return $this->redirectToRefererOrRoute($request, 'home');
+            } else {
+                $resticted = true;
+            }
+        }
+
         $editUserForm = $this->createForm(UserType::class, $user, [
             'form_mode' => 'edit',
+            'restricted' => $resticted,
         ]);
         $editUserForm->handleRequest($request);
 
@@ -89,9 +110,19 @@ final class UserController extends AbstractController
         ], $editUserForm);
     }
 
-    #[Route('/delete/{id}', name: 'user_delete')]
-    public function deleteUser(User $user): Response
+    #[Route('/delete/{id}', name: 'user_delete', methods: ['POST'])]
+    public function deleteUser(User $user, Request $request): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            $this->addError($this->translator->trans('error.users.access_denied'));
+
+            return $this->redirectToRefererOrRoute($request, 'home');
+        }
+        $csrfToken = $request->request->get('_token');
+        if (!\is_string($csrfToken) || !$this->isCsrfTokenValid('delete-user-'.$user->getId(), $csrfToken)) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
         $this->userCreator->delete($user);
         $this->addSuccess($this->translator->trans('success.users.delete'));
 
