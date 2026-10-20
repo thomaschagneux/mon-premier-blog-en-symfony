@@ -9,9 +9,7 @@ use App\Service\User\UserCreator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
-
 
 #[Route('/admin/user')]
 final class UserController extends AbstractController
@@ -44,8 +42,8 @@ final class UserController extends AbstractController
         if (!$this->isGranted('ROLE_ADMIN') && $this->getUser() !== $user) {
             $this->addError($this->translator->trans('error.users.access_denied'));
 
-                return $this->redirectToRefererOrRoute($request, 'home');
-            }
+            return $this->redirectToRefererOrRoute($request, 'home');
+        }
 
         return $this->render('user/user_profile.html.twig', [
             'user' => $user,
@@ -77,7 +75,7 @@ final class UserController extends AbstractController
     public function editUser(User $user, Request $request): Response
     {
         $resticted = false;
-        
+
         if (!$this->isGranted('ROLE_ADMIN')) {
             if ($this->getUser() !== $user) {
                 $this->addError($this->translator->trans('error.users.access_denied'));

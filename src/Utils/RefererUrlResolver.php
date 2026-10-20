@@ -21,30 +21,43 @@ final class RefererUrlResolver
             return $fallbackUrl;
         }
 
-        $scheme = strtolower($parts['scheme']);
-        if (!\in_array($scheme, ['http', 'https'], true)
-            || $scheme !== strtolower($request->getScheme())
-            || strcasecmp($parts['host'], $request->getHost()) !== 0
-        ) {
-            return $fallbackUrl;
-        }
-
-        $refererPort = $parts['port'] ?? ('https' === $scheme ? 443 : 80);
-        if ($refererPort !== $request->getPort()) {
+        if (!self::isSameOrigin($parts, $request)) {
             return $fallbackUrl;
         }
 
         $path = $parts['path'];
-        if (!str_starts_with($path, '/')
-            || str_starts_with($path, '//')
-            || str_contains($path, '\\')
-            || preg_match('/[\x00-\x1F\x7F]/', $path)
-        ) {
+        if (!self::isSafePath($path)) {
             return $fallbackUrl;
         }
 
         $url = $path.(isset($parts['query']) ? '?'.$parts['query'] : '');
 
         return $url === $request->getRequestUri() ? $fallbackUrl : $url;
+    }
+
+    /**
+     * @param array{scheme: string, host: string, path: string, port?: int} $parts
+     */
+    private static function isSameOrigin(array $parts, Request $request): bool
+    {
+        $scheme = strtolower($parts['scheme']);
+        if (!\in_array($scheme, ['http', 'https'], true)
+            || $scheme !== strtolower($request->getScheme())
+            || 0 !== strcasecmp($parts['host'], $request->getHost())
+        ) {
+            return false;
+        }
+
+        $refererPort = $parts['port'] ?? ('https' === $scheme ? 443 : 80);
+
+        return $refererPort === $request->getPort();
+    }
+
+    private static function isSafePath(string $path): bool
+    {
+        return str_starts_with($path, '/')
+            && !str_starts_with($path, '//')
+            && !str_contains($path, '\\')
+            && !preg_match('/[\x00-\x1F\x7F]/', $path);
     }
 }
