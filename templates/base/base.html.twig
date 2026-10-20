@@ -34,6 +34,15 @@
 </nav>
 
 <main class="container my-4">
+
+    {% for type, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ type == 'error' ? 'danger' : type }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {#
         <div class="alert alert-info d-flex align-items-center" role="alert">
             <div>
                 Bootstrap est chargé en local via AssetMapper. Ceci est une alerte de test.
@@ -47,7 +56,7 @@
                 OK: le composant Collapse fonctionne.
             </div>
         </div>
-
+ #}
 
     {% block body %}{% endblock %}
 </main>

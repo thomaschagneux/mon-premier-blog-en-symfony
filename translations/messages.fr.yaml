@@ -14,6 +14,7 @@ error:
         add: "Une erreur est survenue lors de la création de l'utilisateur."
         update: "Une erreur est survenue lors de la mise à jour de l'utilisateur."
         delete: "Une erreur est survenue lors de la suppression de l'utilisateur."
+        access_denied: "Vous n'avez pas la permission d'accéder à cette page."
 enums:
     user_role:
         ROLE_USER: "Utilisateur"
@@ -45,3 +46,13 @@ users:
         picture: "Photo de profil"
         alt_picture: "Photo de "
         informations: "Informations utilisateur"
+security:
+    login:
+        email: "Adresse e-mail"
+        login: "Se connecter"
+        success: "Vous êtes connecté(e) avec succès."
+        error: "Nom d'utilisateur ou mot de passe incorrect."
+    logged_in_as: "Vous êtes connecté(e) en tant que"
+    logout:
+        logout: "Se déconnecter"
+        success: "Vous êtes déconnecté(e) avec succès."

@@ -57,7 +57,9 @@ class UserType extends AbstractType
                     )]
                     : [],
             ])
-            ->add('role', ChoiceType::class, [
+        ;
+        if (!$options['restricted']) {
+            $builder->add('role', ChoiceType::class, [
                 'label' => $this->translator->trans('users.property.role'),
                 'choices' => UserRole::cases(),
                 'choice_label' => fn (UserRole $role) => $this->translator->trans($role->label()),
@@ -65,6 +67,7 @@ class UserType extends AbstractType
                 'placeholder' => $this->translator->trans('users.form.role.placeholder'),
                 'required' => false,
             ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -72,6 +75,7 @@ class UserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'form_mode' => 'add',
+            'restricted' => false,
         ]);
     }
 }

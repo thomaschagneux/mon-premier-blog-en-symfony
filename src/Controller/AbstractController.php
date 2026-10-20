@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Enum\FlashType;
+use App\Utils\RefererUrlResolver;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AbstractController extends \Symfony\Bundle\FrameworkBundle\Controller\AbstractController
@@ -22,6 +25,16 @@ class AbstractController extends \Symfony\Bundle\FrameworkBundle\Controller\Abst
             FlashType::ERROR->value,
             $message
         );
+    }
+
+    protected function getToRefererOrRoute(Request $request, string $route): string
+    {
+        return RefererUrlResolver::resolve($request, $this->generateUrl($route));
+    }
+
+    protected function redirectToRefererOrRoute(Request $request, string $route): Response
+    {
+        return new RedirectResponse($this->getToRefererOrRoute($request, $route));
     }
 
     /**

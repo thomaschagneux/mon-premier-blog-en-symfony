@@ -20,7 +20,7 @@ class StringManipulator
         $string = preg_replace('/([a-z])([A-Z])/', '$1_$2', $string);
 
         if (null === $string) {
-            throw new InvalidArgumentException("the string can't be null");
+            throw new InvalidArgumentException('Invalid string provided for snake case conversion.');
         }
 
         return strtolower($string);
